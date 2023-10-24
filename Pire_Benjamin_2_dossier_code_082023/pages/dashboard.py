@@ -70,7 +70,6 @@ def main():
             pred = request_prediction(MLFLOW_URI,client_select)
             st.markdown("Le client selectioné  est " + pred["class"] ) 
             st.markdown("Avec une probailité de "  + str(pred["proba"]))
-            #st.markdown("Voicis maintenant les résultats de l'interprétabilité locale "  + str(pred["inter"]))
             components.html(pred["inter"], height=800)        
 
         # selectionner quelques variables
