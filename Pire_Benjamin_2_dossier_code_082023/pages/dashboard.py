@@ -8,6 +8,7 @@ import seaborn as sns
 import lime.lime_tabular
 import re
 import plotly.graph_objects as go
+import streamlit.components.v1 as components
 
 
 
@@ -69,7 +70,8 @@ def main():
             pred = request_prediction(MLFLOW_URI,client_select)
             st.markdown("Le client selectioné  est " + pred["class"] ) 
             st.markdown("Avec une probailité de "  + str(pred["proba"]))
-            #st.markdown("Voicis maintenant les résultats de l'interprétabilité locale "  + #str(pred["inter"]))
+            #st.markdown("Voicis maintenant les résultats de l'interprétabilité locale "  + str(pred["inter"]))
+            components.html(pred["inter"], height=800)        
 
         # selectionner quelques variables
         if predict_btn:
@@ -84,7 +86,6 @@ def main():
         if predict_btn:
             for i in range(len(variable)):
                 st.line_chart(df, x="SK_ID_CURR", y=variable[i])
-                
                 
                 
 if __name__ == '__main__':

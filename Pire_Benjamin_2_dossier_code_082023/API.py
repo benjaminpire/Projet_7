@@ -39,16 +39,16 @@ def predict(data : request_body):
         mode='classification'
     )
     print(model)
-    #exp = explainer.explain_instance(
-    #    data_row=np.array(X_test.loc[X_test["SK_ID_CURR"] == data.client_id])[0], 
-    #    predict_fn=model.predict_proba)
+    exp = explainer.explain_instance(
+        data_row=np.array(X_test.loc[X_test["SK_ID_CURR"] == data.client_id])[0], 
+        predict_fn=model.predict_proba)
     # Extract relevant information from exp for JSON response
-    #explanation_data = {
-    #    "as_list": exp.as_list(),
-    #    "show_table": exp.show_in_notebook(show_table=True)  # You may need to modify this part
-    #}
+    explanation_data = {
+        "as_list": exp.as_list(),
+        "show_table": exp.show_in_notebook(show_table=True)  
+    }
 
-    #exp.show_in_notebook(show_table=True)
+    exp.show_in_notebook(show_table=True)
     
     
     # Predicting the Class
@@ -67,7 +67,7 @@ def predict(data : request_body):
     else :
         valid_pret = 'refusé'
         proba = proba_pred[0][1]
-
-    return {'class' : valid_pret, 'proba' : proba}
+    print("this is it" + str(exp))
+    return {'class' : valid_pret, 'proba' : proba, 'inter' : exp.as_html()}
 
 #'inter' : exp
