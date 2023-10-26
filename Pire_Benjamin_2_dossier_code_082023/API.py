@@ -62,10 +62,10 @@ def predict(data : request_body):
     proba = None 
     valid_pret = None
     if pred[0]==0: 
-        valid_pret = 'autorisé'
+        valid_pret = 'refusé'
         proba = proba_pred[0][0]
     else :
-        valid_pret = 'refusé'
+        valid_pret = 'autorisé'
         proba = proba_pred[0][1]
     print("this is it" + str(exp))
     return {'class' : valid_pret, 'proba' : proba, 'inter' : exp.as_html()}
