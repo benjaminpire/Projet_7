@@ -16,3 +16,4 @@ dependencies:
   - pip=19.3.1
   - pip:
     - pickle
+    - uvicorn=0.23.2
