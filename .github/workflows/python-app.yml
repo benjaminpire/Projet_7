@@ -39,9 +39,10 @@ jobs:
         if (Test-Path -Path "test.py") {python test.py}
     - name: Run APi
       run: |
-        uvicorn Pire_Benjamin_2_dossier_code_082023/API:app --reload
+        cd Pire_Benjamin_2_dossier_code_082023
+        uvicorn API:app --reload
     - name: Open dashboard
       run: |
-        streamlit run Pire_Benjamin_2_dossier_code_082023/Dashboard.py
+        streamlit run Dashboard.py
 
       
