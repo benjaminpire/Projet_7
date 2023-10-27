@@ -3,10 +3,26 @@ import pickle as pkl
 import pandas as pd 
 from pydantic import BaseModel
 import API
-#from fastapi.testclient import TestClient
+#from fastapi.testclient import TestClient 
 
 
-#client = TestClient(app)
+#client = TestClient(app) 
+
+
+# github action 
+# requirements.txt 
+# liste de toutes les librairie utilisée 
+# pip install -r requirements.txt 
+
+# puis heriku pour déploier l'API pour le cloud et récupérer le lien 
+
+# AWS aussi 
+
+# déployer le dashboard streamlit 
+
+# st.dataframe pour les variables et graph 
+
+
 
 
 # charge the model
@@ -27,7 +43,7 @@ class Test_variable(unittest.TestCase):
         """
         pred = model.predict(X_test.loc[X_test["SK_ID_CURR"] == 160905])
         self.assertEqual(pred, 1)
-    
+
     def test_probality(self):
         """
         Test that it can sum a list of integers
@@ -46,7 +62,7 @@ class Test_API(unittest.TestCase):
         result = self.app.get('/')
         # Make your assertions
 """
-    
+
 if __name__ == '__main__':
     unittest.main()
     
