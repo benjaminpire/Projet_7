@@ -40,7 +40,8 @@ jobs:
     - name: Run APi
       run: |
         cd Pire_Benjamin_2_dossier_code_082023
-        python -m uvicorn API:app --reload
+        pip install uvicorn
+        uvicorn API:app --reload
     - name: Open dashboard
       run: |
         streamlit run Dashboard.py
