@@ -39,9 +39,9 @@ jobs:
         if [ -f test.py ]; then python test.py; fi
     - name: Run APi
       run: |
-        uvicorn API:app --reload
+        uvicorn Pire_Benjamin_2_dossier_code_082023/API:app --reload
     - name: Open dashboard
       run: |
-        streamlit run Dashboard.py
+        streamlit run Pire_Benjamin_2_dossier_code_082023/Dashboard.py
 
       
