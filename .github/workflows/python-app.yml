@@ -37,13 +37,4 @@ jobs:
     - name: Test with unitest
       run: |
         if (Test-Path -Path "test.py") {python test.py}
-    - name: Run APi
-      run: |
-        cd Pire_Benjamin_2_dossier_code_082023
-        pip install uvicorn
-        uvicorn API:app --reload
-    - name: Open dashboard
-      run: |
-        streamlit run Dashboard.py
 
-      
