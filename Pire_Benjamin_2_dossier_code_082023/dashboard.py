@@ -9,6 +9,7 @@ import lime.lime_tabular
 import re
 import plotly.graph_objects as go
 import streamlit.components.v1 as components
+import plotly.express as px
 
 
 
@@ -22,9 +23,9 @@ import streamlit.components.v1 as components
     
     
 # diagramme en jauge de chez plotly 
-    
-    
-        
+
+
+
 def request_prediction(model_uri, data):
     headers = {"Content-Type": "application/json"}
 
@@ -40,6 +41,7 @@ def request_prediction(model_uri, data):
 
 
 def main():
+    
     #get the data frames
     df = pd.read_csv( 'X_test.csv')
     X_train = pd.read_csv('X_train.csv')
@@ -47,45 +49,81 @@ def main():
     #link to the url
     MLFLOW_URI = 'http://127.0.0.1:8000/predict'
     
-    
-    #create 2 columns of display : 
-    container_corp = st.container()
-    with container_corp:
-        col1, col2 = st.columns([2,3])
-    
-    # column 1
-    with col1:
+    tab1, tab2, tab3 = st.tabs(["Informations client", "Comparaison avec d'autres clients", "Score interprétation"])
 
+    
+    with tab1:
         # selection of the client 
         client_select = st.selectbox(
                 "Select **the ID** of the client",
                df["SK_ID_CURR"])
-        variable = st.multiselect('Selectionnez quelques variables',
-                                  df.columns,
-                                  "DAYS_REGISTRATION")
+        
+        col_list = ["SK_ID_CURR", "DAYS_BIRTH","CNT_CHILDREN", "FLAG_EMP_PHONE", "FLAG_EMAIL", "NAME_EDUCATION_TYPE_Highereducation","CODE_GENDER", "AMT_CREDIT", "AMT_INCOME_TOTAL"]
+        st.dataframe(
+                df.loc[df["SK_ID_CURR"] == client_select, col_list],
+                column_config={
+                    "SK_ID_CURR": "ID du client",
+                    "DAYS_BIRTH": "Années de naissance",
+                    "CNT_CHILDREN": "numbers of children",
+                    "FLAG_EMP_PHONE": "Personal phone",
+                    "FLAG_EMAIL": "Mail",
+                    "NAME_EDUCATION_TYPE_Highereducation": "Higher education",
+                    "CODE_GENDER": "genre",
+                    "AMT_CREDIT": "Montant du crédit",
+                    "AMT_INCOME_TOTAL": "Total des entrans"},
+                height = 75)
+        
+
         predict_btn = st.button('Prédire')
-        # prediction 
+
+        col1, col2 = st.columns(2)
         if predict_btn:
             pred = None
             pred = request_prediction(MLFLOW_URI,client_select)
-            st.markdown("Le client selectioné  est " + pred["class"] ) 
-            st.markdown("Avec une probailité de "  + str(pred["proba"]))
-            components.html(pred["inter"], height=800)        
+            st.metric("Le client selectioné  est", value=pred["class"])
+        
+
+    with tab2:
+        variable = st.multiselect('Selectionnez quelques variables',
+                                  df.columns) 
+        col_binaire = df.loc[:,[col for col in df.columns if 'FLAG' in col]].columns.tolist()
+        col_binaire.append('CODE_GENDER')
+        col1, col2 = st.columns([1, 4])
+        for i in range(len(variable)):
+            df["str_SK_ID_CURR"] = df["SK_ID_CURR"].astype(str)
+            client_value = df.loc[df["SK_ID_CURR"] == client_select, variable[i]]
+            if variable[i] in col_binaire: 
+                with col1:
+                    st.metric(label=variable[i],
+                              value=client_value)
+            else: 
+                with col2:
+                    colors = {client_select: "red"}
+                    color_discrete_map = {c: colors.get(c, "blue") for c in df["SK_ID_CURR"]}
+                    fig = px.strip(df, x = variable[i], color_discrete_map= color_discrete_map)
+                    #mask = df["SK_ID_CURR"]==client_select
+                    #fig.update_traces(marker=dict(color="RoyalBlue"), selector=dict(x=client_value))
+                    
+
+                    
+                    st.plotly_chart(fig)
+
+        
+        
+    with tab3:
+        col1, col2 = st.columns(2)
 
         # selectionner quelques variables
         if predict_btn:
-            for i in range(len(variable)):
-                st.metric(label=variable[i],
-                          value=df.loc[df["SK_ID_CURR"] == client_select, variable[i]])
-        
-        
-        
-    # column 2
-    with col2:
-        if predict_btn:
-            for i in range(len(variable)):
-                st.line_chart(df, x="SK_ID_CURR", y=variable[i])
-                
-                
+            with col1:
+                pred = None
+                pred = request_prediction(MLFLOW_URI,client_select)
+                st.metric("Le client selectioné  est", value=pred["class"])
+            with col2:
+                st.metric("Avec une probailité de", value=pred["proba"])
+            
+            #components.html(pred["inter"], height=800)        
+
+
 if __name__ == '__main__':
     main()
