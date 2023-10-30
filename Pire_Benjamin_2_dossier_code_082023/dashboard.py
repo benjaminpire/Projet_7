@@ -10,7 +10,7 @@ import re
 import plotly.graph_objects as go
 import streamlit.components.v1 as components
 import plotly.express as px
-
+import plotly.graph_objects as go
 
 
 # Permettre de visualiser le score et l’interprétation de ce score pour chaque client de façon intelligible pour une personne non experte en data science.
@@ -100,10 +100,9 @@ def main():
                 with col2:
                     colors = {client_select: "red"}
                     color_discrete_map = {c: colors.get(c, "blue") for c in df["SK_ID_CURR"]}
-                    fig = px.strip(df, x = variable[i], color_discrete_map= color_discrete_map)
-                    #mask = df["SK_ID_CURR"]==client_select
-                    #fig.update_traces(marker=dict(color="RoyalBlue"), selector=dict(x=client_value))
-                    
+                    fig = px.strip(df, x = variable[i])
+                    fig2 = px.strip(df.loc[df["SK_ID_CURR"] == client_select], x = variable[i], color_discrete_sequence = ["red"]).data
+                    fig.add_traces(fig2)
 
                     
                     st.plotly_chart(fig)
