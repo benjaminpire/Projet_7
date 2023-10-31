@@ -68,6 +68,6 @@ def predict(data : request_body):
         valid_pret = 'autorisé'
         proba = proba_pred[0][1]
     print("this is it" + str(exp))
-    return {'class' : valid_pret, 'proba' : proba, 'inter' : exp.as_html()}
+    return {'class' : valid_pret, 'proba' : proba, 'inter' : exp.as_list()}
 
 #'inter' : exp
